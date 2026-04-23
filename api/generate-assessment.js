@@ -51,12 +51,8 @@ How to work:
 1. Read the three answers carefully.
 2. Identify patterns, contradictions, buzzwords, and logic patterns.
 3. Derive a short diagnosis.
-4. Assign a score.
+4. Assign a score (used internally — not part of the written assessment).
 5. Write a short assessment text with clear, intelligent sharpness.
-6. At the end, reference the IIEX keynote and offer to:
-   - send the assessment by email
-   - send the IIEX keynote slides by email
-   - send book release info by email
 
 Tone:
 - intelligent
@@ -70,23 +66,15 @@ Tone:
 - the prospect should feel recognized
 - the text should read like a precise mirror
 
-Length rules:
-- First, output only the score on one line
-- Then a very short label on one line
-- Then an assessment of 120 to 180 words
-- Then a very short CTA of 2 to 3 sentences
-
-Format — use exactly this output format:
-
-Score: XX/100
-
-Classification: [short label, 3–6 words]
-
-Assessment:
-[120–180 words. Show clearly which thinking patterns are visible in the answers. Address the person directly as "you". Highlight whether they are still strongly thinking in attention/persuasion/explicit survey/data-volume logic — or whether a more differentiated understanding is already visible. Bring the themes of implicit vs. explicit, correlation vs. causation, and classical models vs. actual decision mechanics sharply to the point. No bullet points.]
-
-CTA:
-[2–3 sentences. Mention that you would be happy to send this assessment together with the IIEX keynote slides and book release dates by email.]
+Length and structure rules for "full_assessment":
+- 180 to 240 words of plain prose.
+- Split into 3 to 4 paragraphs, separated by a blank line (\\n\\n), for readability.
+- No headings, no labels, no "Score:", no "Classification:", no "Assessment:", no "CTA:".
+- No bullet points, no numbered lists.
+- No call-to-action, no mention of email, slides, book, or follow-up — that is handled separately in the email shell.
+- Do NOT include the numeric score or the classification label inside this text.
+- Start directly with the diagnostic observation. Address the person as "you".
+- Each paragraph should carry one clear idea: e.g. (1) overall pattern observed, (2) specific tension or blind spot in their thinking, (3) what this implies about their relationship to implicit/causal research, (4) the most promising angle to build on.
 
 Additional scoring logic:
 - If the person treats attention as a prerequisite of effectiveness, count that as classical AIDA thinking.
@@ -104,11 +92,12 @@ Important:
 - Do not write academically.
 - Do not write like an automated personality test.
 - Write so the text works in a high-quality conference or keynote context.
+- Write exclusively in English.
 
 Now evaluate the answers.
 
-IMPORTANT: Respond exclusively with valid JSON without Markdown formatting or code blocks:
-{"score": <number 0-100>, "einordnung": "<3-6 words>", "full_assessment": "<Score: XX/100\\n\\nClassification: [label]\\n\\nAssessment:\\n[120-180 words]\\n\\nCTA:\\n[2-3 sentences]>"}`;
+IMPORTANT: Respond exclusively with valid JSON without Markdown formatting or code blocks. The "full_assessment" field must contain plain prose only — no headings, no labels, no score, no CTA — just 3 to 4 paragraphs separated by \\n\\n:
+{"score": <number 0-100>, "einordnung": "<3-6 words>", "full_assessment": "<180-240 words of plain prose in 3-4 paragraphs separated by \\n\\n>"}`;
 
 export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
@@ -163,7 +152,7 @@ export default async function handler(req, res) {
       console.error('JSON parse failed:', rawText);
       return res.status(200).json({
         score: null,
-        einordnung: 'Auswertung nicht verfügbar',
+        einordnung: 'Assessment unavailable',
         full_assessment: rawText,
       });
     }
